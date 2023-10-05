@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +16,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Main application routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['auth', 'role.redirect']);
+    Route::resource('users', UserController::class);
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(['auth', 'role.redirect']);
 });
+
+// Authentication routes
+Auth::routes();
+
+// Role-based routes
+require __DIR__ . '/author.php';
+require __DIR__ . '/collaborator.php';
+require __DIR__ . '/admin.php';

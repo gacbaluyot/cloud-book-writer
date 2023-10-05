@@ -28,13 +28,36 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
+        $this->configureRoutes();
+    }
 
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
-        });
+    /**
+     * Configure the routes.
+     */
+    protected function configureRoutes(): void
+    {
+        // API routes
+        Route::middleware('api')
+            ->prefix('api')
+            ->group(base_path('routes/api.php'));
+
+        // General web routes
+        Route::middleware('web')
+            ->group(base_path('routes/web.php'));
+
+        // Author routes
+        Route::middleware(['web', 'auth'])
+            ->prefix('author')
+            ->group(base_path('routes/author.php'));
+
+        // Collaborator routes
+        Route::middleware(['web', 'auth', 'role:collaborator'])
+            ->prefix('collaborator')
+            ->group(base_path('routes/collaborator.php'));
+
+        // Admin routes
+        Route::middleware(['web', 'auth', 'role:admin'])
+            ->prefix('admin')
+            ->group(base_path('routes/admin.php'));
     }
 }
