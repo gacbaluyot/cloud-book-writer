@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
 use App\Services\SectionService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -38,21 +39,25 @@ class SectionController extends Controller
 
     /**
      * @param Request $request
-     * @return RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
-        $section = $this->sectionService->storeSection([
-            'book_id' => $request->get('book_id'),
-            'parent_section_id' => $request->get('parent_section_id') ?? null,
-            'title' => $request->get('title') ?? null,
-            'content' => $request->get('content') ?? null
-        ]);
-
-        if ($section) {
-            return redirect()->back()->with('success', 'Succesfully Created Section');
-        } else {
-            return redirect()->back()->with('error', 'Error in creating section.');
+        try {
+            $section = $this->sectionService->storeSection([
+                'book_id' => $request->get('book_id'),
+                'parent_section_id' => $request->get('parent_section_id') ?? null,
+                'title' => $request->get('title') ?? null,
+                'content' => $request->get('content') ?? null
+            ]);
+            return response()->json([
+                'success' => true,
+            ], 200);
+        } catch (\Exception $exception) {
+            dd($exception);
+            return response()->json([
+                'message' => "Error Creating Section",
+            ], 500);
         }
     }
 
@@ -74,7 +79,6 @@ class SectionController extends Controller
 
     public function update(Request $request, $id)
     {
-
         $section = $this->sectionService->updateSection($id, [
             'title' => $request->get('title'),
             'parent_section_id' => $request->get('parent_section_id'),
@@ -99,7 +103,7 @@ class SectionController extends Controller
         }
     }
 
-    public function getSectionsForBook(Book $book)
+    public function getSectionsForBook(Book $book): \Illuminate\Http\JsonResponse
     {
         $sections = $this->sectionService->getSectionsForBook($book);
         return response()->json($sections);

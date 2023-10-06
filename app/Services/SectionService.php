@@ -145,10 +145,22 @@ class SectionService
         $section = Section::find($id);
 
         if ($section) {
-            SectionClosure::where('ancestor', $id)->orWhere('descendant', $id)->delete();
-            // Now delete the section itself
-            $section = Section::find($id);
-            $section->delete();
+            // 1. Find all descendants of the ancestor.
+            $descendants = SectionClosure::where('ancestor', $id)
+                ->where('depth', '>', 0)
+                ->pluck('descendant')
+                ->toArray();
+
+            // Add the ancestor to the list (to delete its relations too)
+            $descendants[] = $id;
+
+            // 2. Delete the corresponding closure table entries for the descendants and ancestor.
+            SectionClosure::whereIn('descendant', $descendants)->delete();
+            SectionClosure::whereIn('ancestor', $descendants)->delete();
+
+            // 3. Delete the descendants (and ancestor) from the `sections` table.
+            Section::whereIn('id', $descendants)->delete();
+
             return true;
         }
 

@@ -128,6 +128,8 @@
         @include('collaborator.modals.add-collaborator', ['book' => $book, 'collaborators' => $collaborators])
     @endif
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script type="text/javascript">
     $(document).ready(function () {
         const bookId = $('#book_id').val();
@@ -161,8 +163,8 @@
                 success: function (response) {
                     if (response.success) {
                         // Reset form or show a success message
-                        $("#section-form")[0].reset();
                         alert('Section added successfully.');
+                        window.location.reload();
                     } else {
                         alert('There was an error.');
                     }
