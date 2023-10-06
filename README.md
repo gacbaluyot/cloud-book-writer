@@ -55,6 +55,36 @@ php artisan migrate --seed
 
 Now, navigate to the displayed URL (usually `http://localhost:8000`) in your browser.
 
+## Frontend Setup
+
+This project uses Vite for a better front-end development experience. Here's how to set it up:
+
+1. **Install Node Dependencies**:
+```
+npm install
+```
+
+2. **Development**:
+- To start the development server:
+  ```
+  npm run dev
+  ```
+
+3. **Production**:
+- To build for production:
+  ```
+  npm run build
+  ```
+
+### Frontend Packages
+
+- **Vite**: A build tool that aims to provide a faster and leaner development experience for modern web projects. [More about Vite](https://vitejs.dev/).
+- **Bootstrap**: The world’s most popular front-end open-source toolkit. [More about Bootstrap](https://getbootstrap.com/).
+- **axios**: A promise-based HTTP client for the browser and Node.js. [More about axios](https://axios-http.com/).
+- **@popperjs/core**: Popper is a positioning engine; its purpose is to calculate the position of an element to make it possible to position it near a given reference element. [More about Popper.js](https://popper.js.org/).
+- **sass**: Sass is the most mature, stable, and powerful professional grade CSS extension language in the world. [More about Sass](https://sass-lang.com/).
+
+
 ## Features
 
 - Book Management: Add, edit, and organize book content.
@@ -65,3 +95,5 @@ Now, navigate to the displayed URL (usually `http://localhost:8000`) in your bro
 
 Contributions, issues, and feature requests are welcome! Please ensure to follow the standard pull request process and
 ensure tests pass.
+
+
